@@ -1,3 +1,6 @@
+# aider-chat
 /.aider*
+# Production build
 /build
+# Dependencies
 /node_modules
