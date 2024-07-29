@@ -1,10 +1,11 @@
 import './App.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
 function App() {
   const location = useLocation();
+  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -26,6 +27,19 @@ function App() {
     });
   };
 
+  const handleConfirmShutdown = () => {
+    setShowDialog(true);
+  };
+
+  const handleShutdownDialogYes = () => {
+    setShowDialog(false);
+    handleShutdown();
+  };
+
+  const handleShutdownDialogNo = () => {
+    setShowDialog(false);
+  };
+
   return (
     <div className="App">
       <div className="AppBar">
@@ -34,12 +48,21 @@ function App() {
             <img src="/logo192.png" alt="logo" className="AppBar-logo" />
             <h1 className="AppBar-title">Raspberry control</h1>
           </div>
-          <button className="AppBar-shutdown" onClick={handleShutdown}>
+          <button className="AppBar-shutdown" onClick={handleConfirmShutdown}>
             <PowerSettingsNewIcon />
           </button>
         </div>
       </div>
       <header className="App-header" />
+      {showDialog && (
+        <div className="Dialog">
+          <div className="Dialog-content">
+            <p>Do you really want to shut down Raspberry?</p>
+            <button onClick={handleShutdownDialogYes}>Yes</button>
+            <button onClick={handleShutdownDialogNo}>No</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
