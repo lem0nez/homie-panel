@@ -19,7 +19,7 @@ function App() {
 
   const handleShutdown = async () => {
     const authToken = document.cookie.split('; ').find(row => row.startsWith('authToken=')).split('=')[1];
-    await fetch('/api/shutdown', {
+    await fetch('/api/poweroff', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${authToken}`,
