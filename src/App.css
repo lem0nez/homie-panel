@@ -27,6 +27,12 @@
 .AppBar-content {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+
+.AppBar-left {
+  display: flex;
+  align-items: center;
 }
 
 .AppBar-logo {
@@ -38,4 +44,22 @@
   font-size: 1.2rem;
   font-weight: normal;
   margin: 0;
+}
+
+.AppBar-shutdown {
+  background-color: transparent;
+  border-radius: 5px;
+  border: none;
+  color: #FF3B6A;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.8rem;
+  width: 1.8rem;
+  margin: 3px 15px;
+}
+
+.AppBar-shutdown:hover {
+  background: #303030;
 }

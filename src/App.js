@@ -1,6 +1,7 @@
 import './App.css';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
 function App() {
   const location = useLocation();
@@ -15,12 +16,27 @@ function App() {
     }
   }, [location]);
 
+  const handleShutdown = async () => {
+    const authToken = document.cookie.split('; ').find(row => row.startsWith('authToken=')).split('=')[1];
+    await fetch('/api/shutdown', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+      }
+    });
+  };
+
   return (
     <div className="App">
       <div className="AppBar">
         <div className="AppBar-content">
-          <img src="/logo192.png" alt="logo" className="AppBar-logo" />
-          <h1 className="AppBar-title">Raspberry control</h1>
+          <div className="AppBar-left">
+            <img src="/logo192.png" alt="logo" className="AppBar-logo" />
+            <h1 className="AppBar-title">Raspberry control</h1>
+          </div>
+          <button className="AppBar-shutdown" onClick={handleShutdown}>
+            <PowerSettingsNewIcon />
+          </button>
         </div>
       </div>
       <header className="App-header" />
