@@ -12,3 +12,30 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.AppBar {
+  background-color: #151515;
+  padding: 10px 3px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-align: left;
+  color: white;
+}
+
+.AppBar-content {
+  display: flex;
+  align-items: center;
+}
+
+.AppBar-logo {
+  height: 1.8rem;
+  margin: 3px 12px;
+}
+
+.AppBar-title {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin: 0;
+}
