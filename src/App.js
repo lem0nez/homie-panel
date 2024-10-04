@@ -46,7 +46,7 @@ function App() {
         <div className="AppBar-content">
           <div className="AppBar-left">
             <img src="/logo192.png" alt="logo" className="AppBar-logo" />
-            <h1 className="AppBar-title">Raspberry control</h1>
+            <h1 className="AppBar-title">Homie Home</h1>
           </div>
           <button className="AppBar-shutdown" onClick={handleConfirmShutdown}>
             <PowerSettingsNewIcon />
@@ -57,7 +57,7 @@ function App() {
       {showDialog && (
         <div className="Dialog">
           <div className="Dialog-content">
-            <p>Do you really want to shut down Raspberry?</p>
+            <p>Do you really want to shut down the server?</p>
             <button onClick={handleShutdownDialogYes}>Yes</button>
             <button onClick={handleShutdownDialogNo}>No</button>
           </div>
