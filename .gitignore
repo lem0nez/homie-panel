@@ -1,6 +1,8 @@
 # aider-chat
 /.aider*
+# Stores the exact state of the project
+/.yarn/install-state.gz
 # Production build
-/build
+/dist
 # Dependencies
 /node_modules
