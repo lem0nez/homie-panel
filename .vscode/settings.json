@@ -1,9 +1,7 @@
 {
-    "cssVariables.lookupFiles": [
-        "**/*.css",
-        "**/*.scss",
-        "**/*.sass",
-        "**/*.less",
-        "node_modules/@mantine/core/styles.css"
-    ]
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "node_modules/@mantine/core/styles.css"
+  ],
+  "editor.tabSize": 2
 }

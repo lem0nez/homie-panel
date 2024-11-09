@@ -1,5 +1,5 @@
 class Piano<Type> {
-  piano: Type;
+  piano: Type
 }
 
 const RECORDINGS = `{
@@ -11,17 +11,17 @@ const RECORDINGS = `{
       humanDuration
     }
   }
-}`;
+}`
 
 class Recordings {
-  recordings: Recording[];
+  recordings: Recording[]
 }
 
 class Recording {
-  id: number;
-  apiEndpoint: string;
-  humanCreationDate: string;
-  humanDuration: string;
+  id: number
+  apiEndpoint: string
+  humanCreationDate: string
+  humanDuration: string
 }
 
 const PLAY_RECORDING = `
@@ -30,4 +30,4 @@ const PLAY_RECORDING = `
       playRecording(id: $id)
     }
   }
-`;
+`

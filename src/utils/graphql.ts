@@ -1,17 +1,17 @@
-import { createClient } from "graphqurl";
+import { createClient } from 'graphqurl'
 
 class Response<Type> {
-  data: Type | undefined;
-  errors: Error[] | undefined;
+  data: Type | undefined
+  errors: Error[] | undefined
 }
 
 class Error {
-  message: string;
-  extensions: Extensions;
+  message: string
+  extensions: Extensions
 }
 
 class Extensions {
-  code: string;
+  code: string
 }
 
 const client = createClient({
@@ -22,14 +22,12 @@ const client = createClient({
         + window.location.host
         + '/api/graphql',
   }
-});
+})
 
-async function query<Type>(
-  query: string, variables?: Record<string, unknown>
-): Promise<Response<Type>> {
-  let response = {} as Response<Type>;
+async function query<Type>(query: string, variables?: Record<string, unknown>) {
+  let response = {} as Response<Type>
   await client.query({ query, variables })
     .catch((err) => response = err)
-    .then((val) => response = val);
-  return response;
+    .then((val) => response = val)
+  return response
 }
