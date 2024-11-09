@@ -1,33 +1,56 @@
-import { createClient } from 'graphqurl'
+import { notifications } from '@mantine/notifications'
+import { ExecutionResult } from 'graphql'
+import { createClient } from 'graphql-ws'
 
-class Response<Type> {
-  data: Type | undefined
-  errors: Error[] | undefined
-}
+type Result<Data> = ExecutionResult<Data>
 
 class Error {
   message: string
-  extensions: Extensions
-}
-
-class Extensions {
-  code: string
+  code?: string
 }
 
 const client = createClient({
-  endpoint: '/api/graphql',
-  websocket: {
-    endpoint:
-      window.location.protocol === 'https:' ? 'wss://' : 'ws://'
-        + window.location.host
-        + '/api/graphql',
-  }
+  url: window.location.protocol === 'https:' ? 'wss://' : 'ws://'
+    + window.location.host
+    + '/api/graphql'
 })
 
-async function query<Type>(query: string, variables?: Record<string, unknown>) {
-  let response = {} as Response<Type>
-  await client.query({ query, variables })
-    .catch((err) => response = err)
-    .then((val) => response = val)
-  return response
+export async function query<Data>(
+  query: string,
+  variables?: Record<string, unknown>,
+  dataCallback?: (data: Data) => void,
+  errorCallback?: (error: Error) => void
+) {
+  const resultIter: AsyncIterableIterator<Result<Data>> = client.iterate({ query, variables })
+  try {
+    for await (const result of resultIter) {
+      if (result.errors != undefined) {
+        result.errors.forEach((graphqlError) => {
+          const error = new Error();
+          error.message = graphqlError.message
+          if (graphqlError.extensions?.code != undefined) {
+            error.code = graphqlError.extensions.code as string
+          }
+
+          errorCallback?.(error)
+          notifyError(error.message)
+        })
+      }
+      if (result.data != undefined) {
+        dataCallback?.(result.data)
+      }
+    }
+  } catch (err) {
+    console.error(err)
+    notifyError('Server is unreachable')
+  }
+
+}
+
+function notifyError(message: string) {
+  notifications.show({
+    color: 'red',
+    title: 'Error',
+    message
+  })
 }

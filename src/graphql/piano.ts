@@ -1,5 +1,5 @@
-class Piano<Type> {
-  piano: Type
+class Piano<Data> {
+  piano: Data
 }
 
 const RECORDINGS = `{

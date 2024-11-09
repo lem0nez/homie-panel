@@ -1,8 +1,11 @@
 import '@mantine/core/styles.css'
+import '@mantine/notifications/styles.css'
+
 import {
   Box, Button, Container, Dialog, MantineProvider, SimpleGrid, Tabs, Text
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
+import { Notifications } from '@mantine/notifications'
 import { MdHome, MdMusicNote, MdPowerSettingsNew } from 'react-icons/md'
 
 import { theme } from '../theme'
@@ -17,6 +20,7 @@ export default function App() {
 
   return (
     <MantineProvider theme={theme} defaultColorScheme='dark'>
+      <Notifications />
       <Box className={classes.body}>
         <Tabs defaultValue='home' color='var(--mantine-color-white)'>
           <Tabs.List className={classes.tabs}>
