@@ -10,7 +10,7 @@ import { MdHome, MdMusicNote, MdPowerSettingsNew } from 'react-icons/md'
 
 import { theme } from '../theme'
 import classes from './App.module.css'
-import TempMonitor from './TempMonitor'
+import { LoungeTempMonitor } from './TempMonitor'
 
 export default function App() {
   const [
@@ -34,7 +34,7 @@ export default function App() {
 
           <Container p={15} maw={800}>
             <Tabs.Panel value='home'>
-              <TempMonitor />
+              <LoungeTempMonitor />
               <Button
                 mt={20}
                 variant='outline'
