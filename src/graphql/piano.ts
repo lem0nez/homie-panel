@@ -1,8 +1,6 @@
-class Piano<Data> {
-  piano: Data
-}
+import { gql } from "@apollo/client";
 
-const RECORDINGS = `{
+const RECORDINGS = gql`{
   piano {
     recordings {
       id
@@ -11,23 +9,12 @@ const RECORDINGS = `{
       humanDuration
     }
   }
-}`
+}`;
 
-class Recordings {
-  recordings: Recording[]
-}
-
-class Recording {
-  id: number
-  apiEndpoint: string
-  humanCreationDate: string
-  humanDuration: string
-}
-
-const PLAY_RECORDING = `
+const PLAY_RECORDING = gql`
   query ($id: Int64!) {
     piano {
       playRecording(id: $id)
     }
   }
-`
+`;

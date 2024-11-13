@@ -1,4 +1,6 @@
-export const LOUNGE_DATA = `
+import { gql } from "@apollo/client";
+
+const LOUNGE_DATA = gql`
   subscription {
     loungeTempMonitorData {
       tempCelsius
@@ -6,19 +8,4 @@ export const LOUNGE_DATA = `
       batteryPercents
     }
   }
-`
-
-export class LoungeData {
-  loungeTempMonitorData: Data
-}
-
-export class Data {
-  tempCelsius: string
-  humidityPercents: number
-  batteryPercents: number
-
-  constructor() {
-    this.tempCelsius = '\u2013'
-    this.humidityPercents = this.batteryPercents = 0
-  }
-}
+`;

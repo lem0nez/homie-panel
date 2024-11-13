@@ -1,16 +1,9 @@
 .body {
   color: var(--mantine-color-white);
-
   background: linear-gradient(-45deg, #151515, #212121, var(--mantine-color-gold-9));
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   height: 100vh;
-}
-
-.tabs {
-  :hover {
-    background-color: #35353555;
-  }
 }
 
 @keyframes gradient {
@@ -24,5 +17,11 @@
 
   100% {
     background-position: 0% 50%;
+  }
+}
+
+.tabs {
+  :hover {
+    background-color: #35353555;
   }
 }
