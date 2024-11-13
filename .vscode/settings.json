@@ -4,5 +4,6 @@
     "node_modules/@mantine/core/styles.css",
     "node_modules/@mantine/notifications/styles.css"
   ],
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "typescript.format.semicolons": "insert"
 }
