@@ -1,2 +1,3 @@
-# Homie Home panel
-It is UI for the [Homie Home](https://github.com/lem0nez/homie-home) server.
+# Homie panel
+A frontend part of the [Homie Home](https://github.com/lem0nez/homie-home) project. It's written
+using the [Mantine](https://mantine.dev/) React components.

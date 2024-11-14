@@ -21,7 +21,7 @@ export default function App() {
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark">
       <Notifications />
-      <Box className={classes.body}>
+      <Box className={classes.background}>
         <UnauthorizedOverlay />
 
         <Tabs defaultValue="home" color="var(--mantine-color-white)">
