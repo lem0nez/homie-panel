@@ -33,7 +33,7 @@ export default function App() {
     if (!powerOffRequested) {
       return;
     }
-    fetch("/api/validate", { method: "POST" }).then((response) => {
+    fetch("/api/poweroff", { method: "POST" }).then((response) => {
       powerOffDialog.close();
       setPowerOffRequested(false);
       if (!response.ok) {
