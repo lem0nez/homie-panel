@@ -10,7 +10,7 @@ import { MdHome, MdMusicNote, MdPowerSettingsNew } from "react-icons/md";
 
 import { theme } from "../theme";
 import classes from "./App.module.css";
-import UnauthorizedOverlay from "./UnauthorizedOverlay";
+import { ConnectErrorOverlay, PoweredOffOverlay } from "./MessageOverlay";
 
 export default function App() {
   const [
@@ -22,7 +22,8 @@ export default function App() {
     <MantineProvider theme={theme} defaultColorScheme="dark">
       <Notifications />
       <Box className={classes.background}>
-        <UnauthorizedOverlay />
+        <ConnectErrorOverlay />
+        <PoweredOffOverlay hidden />
 
         <Tabs defaultValue="home" color="var(--mantine-color-white)">
           <Tabs.List className={classes.tabs}>
