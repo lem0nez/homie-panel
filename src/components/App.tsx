@@ -1,6 +1,5 @@
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
-
 import {
   Box, Button, Container, Dialog, MantineProvider, SimpleGrid, Tabs, Text
 } from "@mantine/core";
@@ -8,9 +7,14 @@ import { useDisclosure } from "@mantine/hooks";
 import { Notifications } from "@mantine/notifications";
 import { MdHome, MdMusicNote, MdPowerSettingsNew } from "react-icons/md";
 
-import { theme } from "../theme";
+import { useEffect, useState } from "react";
+import { useSubscription } from "@apollo/client";
+
 import classes from "./App.module.css";
+import { theme } from "../theme";
 import { ConnectErrorOverlay, PoweredOffOverlay } from "./MessageOverlay";
+import { GLOBAL_EVENTS } from "../graphql/other";
+import { handleApolloError } from "../client";
 
 export default function App() {
   const [
@@ -18,12 +22,21 @@ export default function App() {
     { open: openShutdownDialog, close: closeShutdownDialog }
   ] = useDisclosure(false);
 
+  const [poweredOff, setPoweredOff] = useState(false);
+  const { data, error } = useSubscription(GLOBAL_EVENTS);
+  useEffect(() => {
+    if (data != undefined && data.globalEvents == "SHUTDOWN") {
+      setPoweredOff(true);
+    }
+  }, [data]);
+  useEffect(() => handleApolloError(error), [error]);
+
   return (
     <MantineProvider theme={theme} defaultColorScheme="dark">
       <Notifications />
       <Box className={classes.background}>
         <ConnectErrorOverlay />
-        <PoweredOffOverlay hidden />
+        <PoweredOffOverlay hidden={!poweredOff} />
 
         <Tabs defaultValue="home" color="var(--mantine-color-white)">
           <Tabs.List className={classes.tabs}>
