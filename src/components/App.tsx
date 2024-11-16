@@ -10,11 +10,13 @@ import { useEffect, useState } from "react";
 import { MdHome, MdMusicNote, MdPowerSettingsNew } from "react-icons/md";
 import { useSubscription } from "@apollo/client";
 
-import classes from "./App.module.css";
 import { theme } from "../theme";
-import { ConnectErrorOverlay, PoweredOffOverlay } from "./MessageOverlay";
 import { GLOBAL_EVENTS } from "../graphql/other";
 import { handleApolloError } from "../client";
+
+import classes from "./App.module.css";
+import { ConnectErrorOverlay, PoweredOffOverlay } from "./MessageOverlay";
+import { LoungeMonitor } from "./TempMonitor";
 
 export default function App() {
   const [poweredOff, setPoweredOff] = useState(false);
@@ -22,7 +24,7 @@ export default function App() {
 
   const { data: eventsData, error: eventsError } = useSubscription(GLOBAL_EVENTS);
   useEffect(() => {
-    if (eventsData != undefined && eventsData.globalEvents == "SHUTDOWN") {
+    if (eventsData?.globalEvents == "SHUTDOWN") {
       setPoweredOff(true);
     }
   }, [eventsData]);
@@ -69,6 +71,7 @@ export default function App() {
 
           <Container p={15} maw={800}>
             <Tabs.Panel value="home">
+              <LoungeMonitor />
               <Button
                 mt={20}
                 variant="outline"

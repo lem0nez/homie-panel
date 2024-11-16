@@ -27,11 +27,15 @@ export const apolloClient = new ApolloClient({
 });
 
 export function handleApolloError(err: ApolloError | undefined) {
-  if (err != undefined) {
+  if (!err) return;
+
+  err.graphQLErrors.forEach((graphqlErr) => {
+    // const code = graphqlErr.extensions?.["code"] as string | undefined;
     notifications.show({
-      title: err.name,
-      message: err.message,
+      title: "Error",
+      message: graphqlErr.message,
       color: "red",
     });
-  }
+  });
+  console.error(err);
 }

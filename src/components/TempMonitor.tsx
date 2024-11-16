@@ -1,23 +1,48 @@
-import { Flex, Grid, Paper, Stack, Text, Title } from "@mantine/core";
+import { useEffect, useState } from "react";
 import {
   MdBattery0Bar, MdBattery1Bar, MdBattery2Bar, MdBattery3Bar, MdBattery4Bar,
   MdBattery5Bar, MdBattery6Bar, MdBatteryFull
 } from "react-icons/md";
+import { RiSofaLine } from "react-icons/ri";
 
-function TempMonitor() {
+import { Flex, Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import { useSubscription } from "@apollo/client";
+
+import { handleApolloError } from "../client";
+import { Data, LOUNGE_DATA } from "../graphql/temp_monitor";
+
+export function LoungeMonitor() {
+  const [data, setData] = useState(new Data());
+  const { data: subscriptionData, error } = useSubscription(LOUNGE_DATA);
+
+  useEffect(() => {
+    if (subscriptionData) setData(subscriptionData.loungeTempMonitorData);
+  }, [subscriptionData]);
+  useEffect(() => handleApolloError(error), [error]);
+
+  return TempMonitor({ title: "Lounge monitor", icon: <RiSofaLine />, data });
+}
+
+interface Props {
+  title: string;
+  icon: JSX.Element;
+  data: Data;
+}
+
+function TempMonitor({ title, icon, data }: Props) {
   return (
     <Paper p={15}>
       <Grid mb={15}>
         <Grid.Col span={10}>
-          <Text c="gray.5">Temperature and humidity monitor</Text>
+          <Group c="gray.5">{icon}{title}</Group>
         </Grid.Col>
         <Grid.Col span={2}>
-          <Flex justify="flex-end" c="gold">{batteryIcon(0)}</Flex>
+          <Flex justify="flex-end" c="gold">{batteryIcon(data.batteryPercents)}</Flex>
         </Grid.Col>
       </Grid>
       <Stack gap={0}>
-        <Title fw={500}>0 °C</Title>
-        <Text>Humidity: 0 %</Text>
+        <Title fw={500}>{data.tempCelsius} °C</Title>
+        <Text>Humidity: {data.humidityPercents} %</Text>
       </Stack>
     </Paper>
   );
