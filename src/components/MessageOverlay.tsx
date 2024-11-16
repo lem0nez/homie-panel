@@ -13,7 +13,7 @@ export function ConnectErrorOverlay() {
         setProps(new Props(
           false,
           <MdErrorOutline size={100} />,
-          "Server is unreachable (code " + response.status + ")",
+          "Hub is unreachable (code " + response.status + ")",
         ));
       }
     });
@@ -25,7 +25,7 @@ export function PoweredOffOverlay({ hidden }: { hidden: boolean; }) {
   return MessageOverlay(new Props(
     hidden,
     <MdOutlinePowerSettingsNew size={100} />,
-    "Server is powered off",
+    "Hub is shut down",
   ));
 }
 
@@ -44,14 +44,14 @@ class Props {
 function MessageOverlay({ hidden, icon, message }: Props) {
   return (
     <Container hidden={hidden}>
-      <Overlay center blur={1}>
-        <Transition mounted={!hidden} transition="pop">{(styles) =>
-          <Stack style={styles} align="center">
+      <Transition mounted={!hidden}>{(styles) =>
+        <Overlay style={styles} center>
+          <Stack align="center">
             {icon}
             <Title m={15} fw={500} style={{ textAlign: "center" }}>{message}</Title>
           </Stack>
-        }</Transition>
-      </Overlay>
+        </Overlay>
+      }</Transition>
     </Container>
   );
 }

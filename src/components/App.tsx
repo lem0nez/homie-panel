@@ -33,10 +33,14 @@ export default function App() {
     if (!powerOffRequested) {
       return;
     }
+
     fetch("/api/poweroff", { method: "POST" }).then((response) => {
       powerOffDialog.close();
       setPowerOffRequested(false);
-      if (!response.ok) {
+
+      if (response.ok) {
+        setPoweredOff(true);
+      } else {
         notifications.show({
           title: "Shutdown request failed",
           message: response.statusText,
@@ -72,7 +76,7 @@ export default function App() {
                 fullWidth
                 onClick={() => powerOffDialog.open()}
               >
-                Shut down the server
+                Shut down the hub
               </Button>
             </Tabs.Panel>
             <Tabs.Panel value="piano"> </Tabs.Panel>
@@ -80,7 +84,7 @@ export default function App() {
         </Tabs>
 
         <Dialog opened={powerOffDialogOpened}>
-          <Text>Do you really want to shut down the server?</Text>
+          <Text>Do you really want to shut down the hub?</Text>
           <SimpleGrid mt={15} cols={2}>
             <Button loading={powerOffRequested} onClick={() => setPowerOffRequested(true)}>
               Shut down

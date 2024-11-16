@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.11.9",
+    "@fontsource/raleway": "^5.1.0",
     "@mantine/core": "7.13.5",
     "@mantine/hooks": "7.13.5",
     "@mantine/notifications": "^7.13.5",

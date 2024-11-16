@@ -1,4 +1,5 @@
 import { MantineColorsTuple, createTheme } from "@mantine/core";
+import "@fontsource/raleway/latin-400.css";
 
 const gold: MantineColorsTuple = [
   "#fdf8e5",
@@ -16,4 +17,5 @@ const gold: MantineColorsTuple = [
 export const theme = createTheme({
   colors: { gold },
   primaryColor: "gold",
+  fontFamily: "Raleway",
 });

@@ -631,6 +631,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/raleway@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@fontsource/raleway@npm:5.1.0"
+  checksum: 10c0/d13a96eb8f255502abe74740bd281aafc226566bf89db81047d06b5434de51495d5a97a43c2a2dd1864c8f6e4d6c7c8f185c881ac387298dfbbb797d24dc7053
+  languageName: node
+  linkType: hard
+
 "@graphql-typed-document-node/core@npm:^3.1.1":
   version: 3.2.0
   resolution: "@graphql-typed-document-node/core@npm:3.2.0"
@@ -2200,6 +2207,7 @@ __metadata:
   resolution: "homie-panel@workspace:."
   dependencies:
     "@apollo/client": "npm:^3.11.9"
+    "@fontsource/raleway": "npm:^5.1.0"
     "@mantine/core": "npm:7.13.5"
     "@mantine/hooks": "npm:7.13.5"
     "@mantine/notifications": "npm:^7.13.5"
