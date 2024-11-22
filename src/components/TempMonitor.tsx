@@ -37,7 +37,7 @@ function TempMonitor({ title, icon, data }: Props) {
           <Group c="gray.5">{icon}{title}</Group>
         </Grid.Col>
         <Grid.Col span={2}>
-          <Flex justify="flex-end" c="gold">{batteryIcon(data.batteryPercents)}</Flex>
+          <Flex justify="flex-end" c="primary">{batteryIcon(data.batteryPercents)}</Flex>
         </Grid.Col>
       </Grid>
       <Stack gap={0}>

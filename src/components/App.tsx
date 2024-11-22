@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { MdHome, MdMusicNote, MdPowerSettingsNew } from "react-icons/md";
 import { useSubscription } from "@apollo/client";
 
-import { theme } from "../theme";
+import { theme, variablesResolver } from "../theme";
 import { GLOBAL_EVENTS } from "../graphql/other";
 import { handleApolloError } from "../client";
 
@@ -53,24 +53,30 @@ export default function App() {
   }, [powerOffRequested, powerOffDialog]);
 
   return (
-    <MantineProvider theme={theme} defaultColorScheme="dark">
+    <MantineProvider theme={theme} cssVariablesResolver={variablesResolver}
+      defaultColorScheme="dark"
+    >
       <Notifications />
-      <Box className={classes.background}>
+      <Box className={classes.body}>
         <ConnectErrorOverlay />
         <PoweredOffOverlay hidden={!poweredOff} />
 
         <Tabs defaultValue="home" color="var(--mantine-color-white)">
           <Tabs.List className={classes.tabs}>
-            <Tabs.Tab value="home" fz="h5" leftSection={<MdHome />}>Homie Home</Tabs.Tab>
-            <Tabs.Tab value="piano" fz="h5" leftSection={<MdMusicNote />}
-              onClick={() => powerOffDialog.close()}
+            <Tabs.Tab h="var(--mantine-tab-height)" fz="h5"
+              value="home" leftSection={<MdHome />}
+            >
+              Homie Home
+            </Tabs.Tab>
+            <Tabs.Tab h="var(--mantine-tab-height)" fz="h5"
+              value="piano" leftSection={<MdMusicNote />} onClick={() => powerOffDialog.close()}
             >
               Piano
             </Tabs.Tab>
           </Tabs.List>
 
-          <Container p={15} maw={800}>
-            <Tabs.Panel value="home">
+          <Container maw={800}>
+            <Tabs.Panel value="home" p={15} >
               <LoungeMonitor />
               <Button
                 mt={20}
