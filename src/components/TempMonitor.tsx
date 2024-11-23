@@ -8,7 +8,7 @@ import { RiSofaLine } from "react-icons/ri";
 import { Flex, Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
 import { useSubscription } from "@apollo/client";
 
-import { handleApolloError } from "../client";
+import { handleError } from "../client";
 import { Data, LOUNGE_DATA } from "../graphql/temp_monitor";
 
 export function LoungeMonitor() {
@@ -18,7 +18,7 @@ export function LoungeMonitor() {
   useEffect(() => {
     if (subscriptionData) setData(subscriptionData.loungeTempMonitorData);
   }, [subscriptionData]);
-  useEffect(() => handleApolloError(error), [error]);
+  useEffect(() => handleError(error), [error]);
 
   return TempMonitor({ title: "Lounge monitor", icon: <RiSofaLine />, data });
 }
@@ -31,7 +31,7 @@ interface Props {
 
 function TempMonitor({ title, icon, data }: Props) {
   return (
-    <Paper p={15}>
+    <Paper mt={10} p={15}>
       <Grid mb={15}>
         <Grid.Col span={10}>
           <Group c="gray.5">{icon}{title}</Group>

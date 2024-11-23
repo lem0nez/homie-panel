@@ -26,16 +26,19 @@ export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export function handleApolloError(err: ApolloError | undefined) {
+export function handleError(err: ApolloError | undefined) {
   if (!err) return;
 
-  err.graphQLErrors.forEach((graphqlErr) => {
-    // const code = graphqlErr.extensions?.["code"] as string | undefined;
-    notifications.show({
-      title: "Error",
-      message: graphqlErr.message,
-      color: "red",
+  if (err.graphQLErrors.length == 0) {
+    console.error(err);
+  } else {
+    err.graphQLErrors.forEach((graphqlErr) => {
+      // const code = graphqlErr.extensions?.["code"] as string | undefined;
+      notifications.show({
+        title: "Error",
+        message: graphqlErr.message,
+        color: "red",
+      });
     });
-  });
-  console.error(err);
+  }
 }

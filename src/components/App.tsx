@@ -12,11 +12,12 @@ import { useSubscription } from "@apollo/client";
 
 import { theme, variablesResolver } from "../theme";
 import { GLOBAL_EVENTS } from "../graphql/other";
-import { handleApolloError } from "../client";
+import { handleError } from "../client";
 
 import classes from "./App.module.css";
 import { ConnectErrorOverlay, PoweredOffOverlay } from "./MessageOverlay";
 import { LoungeMonitor } from "./TempMonitor";
+import Piano from "./Piano";
 
 export default function App() {
   const [poweredOff, setPoweredOff] = useState(false);
@@ -28,7 +29,7 @@ export default function App() {
       setPoweredOff(true);
     }
   }, [eventsData]);
-  useEffect(() => handleApolloError(eventsError), [eventsError]);
+  useEffect(() => handleError(eventsError), [eventsError]);
 
   const [powerOffRequested, setPowerOffRequested] = useState(false);
   useEffect(() => {
@@ -76,7 +77,7 @@ export default function App() {
           </Tabs.List>
 
           <Container maw={800}>
-            <Tabs.Panel value="home" p={15} >
+            <Tabs.Panel value="home">
               <LoungeMonitor />
               <Button
                 mt={20}
@@ -88,7 +89,9 @@ export default function App() {
                 Shut down the hub
               </Button>
             </Tabs.Panel>
-            <Tabs.Panel value="piano"> </Tabs.Panel>
+            <Tabs.Panel value="piano">
+              <Piano />
+            </Tabs.Panel>
           </Container>
         </Tabs>
 
