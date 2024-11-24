@@ -1,41 +1,38 @@
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
-import {
-  Box, Button, Container, Dialog, MantineProvider, SimpleGrid, Tabs, Text
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { notifications, Notifications } from "@mantine/notifications";
+
+import { Box, Button, Container, Dialog, SimpleGrid, Tabs, Text } from "@mantine/core";
+import { useDisclosure, useLocalStorage } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 
 import { useEffect, useState } from "react";
 import { MdHome, MdMusicNote, MdPowerSettingsNew } from "react-icons/md";
 import { useSubscription } from "@apollo/client";
-
-import { theme, variablesResolver } from "../theme";
-import { GLOBAL_EVENTS } from "../graphql/other";
-import { handleError } from "../client";
 
 import classes from "./App.module.css";
 import { ConnectErrorOverlay, PoweredOffOverlay } from "./MessageOverlay";
 import { LoungeMonitor } from "./TempMonitor";
 import Piano from "./Piano";
 
+import { GLOBAL_EVENTS } from "../graphql/other";
+import { handleError } from "../client";
+
+
 export default function App() {
   const [poweredOff, setPoweredOff] = useState(false);
   const [powerOffDialogOpened, powerOffDialog] = useDisclosure(false);
 
-  const { data: eventsData, error: eventsError } = useSubscription(GLOBAL_EVENTS);
+  const { data: events, error: eventsError } = useSubscription(GLOBAL_EVENTS);
   useEffect(() => {
-    if (eventsData?.globalEvents == "SHUTDOWN") {
+    if (events?.globalEvents == "SHUTDOWN") {
       setPoweredOff(true);
     }
-  }, [eventsData]);
+  }, [events]);
   useEffect(() => handleError(eventsError), [eventsError]);
 
   const [powerOffRequested, setPowerOffRequested] = useState(false);
   useEffect(() => {
-    if (!powerOffRequested) {
-      return;
-    }
+    if (!powerOffRequested) return;
 
     fetch("/api/poweroff", { method: "POST" }).then((response) => {
       powerOffDialog.close();
@@ -53,58 +50,56 @@ export default function App() {
     });
   }, [powerOffRequested, powerOffDialog]);
 
+  const [activeTab, setActiveTab] = useLocalStorage({
+    key: "active-tab",
+    defaultValue: "home",
+  });
+
+  const onTabChange = (tab: string | null) => {
+    if (!tab) return;
+    setActiveTab(tab);
+    if (tab != "home") powerOffDialog.close();
+  };
+
   return (
-    <MantineProvider theme={theme} cssVariablesResolver={variablesResolver}
-      defaultColorScheme="dark"
-    >
-      <Notifications />
-      <Box className={classes.body}>
-        <ConnectErrorOverlay />
-        <PoweredOffOverlay hidden={!poweredOff} />
+    <Box className={classes.body}>
+      <ConnectErrorOverlay />
+      <PoweredOffOverlay hidden={!poweredOff} />
 
-        <Tabs defaultValue="home" color="var(--mantine-color-white)">
-          <Tabs.List className={classes.tabs}>
-            <Tabs.Tab h="var(--mantine-tab-height)" fz="h5"
-              value="home" leftSection={<MdHome />}
+      <Tabs color="var(--mantine-color-white)" value={activeTab} onChange={onTabChange}>
+        <Tabs.List className={classes.tabsList}>
+          <Tabs.Tab className={classes.tab} value="home" leftSection={<MdHome />}>
+            Homie Home
+          </Tabs.Tab>
+          <Tabs.Tab className={classes.tab} value="piano" leftSection={<MdMusicNote />}>
+            Piano
+          </Tabs.Tab>
+        </Tabs.List>
+
+        <Container maw={800}>
+          <Tabs.Panel value="home" pt={15}>
+            <LoungeMonitor />
+            <Button mt={15} variant="outline" leftSection={<MdPowerSettingsNew />} fullWidth
+              onClick={() => powerOffDialog.open()}
             >
-              Homie Home
-            </Tabs.Tab>
-            <Tabs.Tab h="var(--mantine-tab-height)" fz="h5"
-              value="piano" leftSection={<MdMusicNote />} onClick={() => powerOffDialog.close()}
-            >
-              Piano
-            </Tabs.Tab>
-          </Tabs.List>
-
-          <Container maw={800}>
-            <Tabs.Panel value="home">
-              <LoungeMonitor />
-              <Button
-                mt={20}
-                variant="outline"
-                leftSection={<MdPowerSettingsNew />}
-                fullWidth
-                onClick={() => powerOffDialog.open()}
-              >
-                Shut down the hub
-              </Button>
-            </Tabs.Panel>
-            <Tabs.Panel value="piano">
-              <Piano />
-            </Tabs.Panel>
-          </Container>
-        </Tabs>
-
-        <Dialog opened={powerOffDialogOpened}>
-          <Text>Do you really want to shut down the hub?</Text>
-          <SimpleGrid mt={15} cols={2}>
-            <Button loading={powerOffRequested} onClick={() => setPowerOffRequested(true)}>
-              Shut down
+              Shut down the hub
             </Button>
-            <Button variant="outline" onClick={() => powerOffDialog.close()}>Cancel</Button>
-          </SimpleGrid>
-        </Dialog>
-      </Box>
-    </MantineProvider>
+          </Tabs.Panel>
+          <Tabs.Panel value="piano">
+            <Piano />
+          </Tabs.Panel>
+        </Container>
+      </Tabs>
+
+      <Dialog opened={powerOffDialogOpened}>
+        <Text>Do you really want to shut down the hub?</Text>
+        <SimpleGrid mt={15} cols={2}>
+          <Button loading={powerOffRequested} onClick={() => setPowerOffRequested(true)}>
+            Shut down
+          </Button>
+          <Button variant="outline" onClick={() => powerOffDialog.close()}>Cancel</Button>
+        </SimpleGrid>
+      </Dialog>
+    </Box>
   );
 }

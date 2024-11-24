@@ -22,8 +22,17 @@
   }
 }
 
-.tabs {
+.tabsList {
   :hover {
-    background-color: #35353555;
+    background: #35353555;
+  }
+}
+
+.tab {
+  height: var(--mantine-tab-height);
+  font-size: var(--mantine-h5-font-size);
+
+  :hover {
+    background: transparent;
   }
 }

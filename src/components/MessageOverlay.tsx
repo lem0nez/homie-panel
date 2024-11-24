@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { MdErrorOutline, MdOutlinePowerSettingsNew } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 
+
 export function ConnectErrorOverlay() {
   const [props, setProps] = useState(new Props());
   useEffect(() => {
