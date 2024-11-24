@@ -1,10 +1,10 @@
-import { ActionIcon, Group, Paper, ScrollArea, Text } from "@mantine/core";
+import { ActionIcon, Group, Paper, ScrollArea, Slider, Text } from "@mantine/core";
 import { useEffect } from "react";
 import { MdDownload, MdPause, MdPlayArrow } from "react-icons/md";
 import { useMutation, useQuery, useSubscription } from "@apollo/client";
 
 import {
-  PAUSE_PLAYER, PLAYBACK_STATUS, PLAY_RECORDING, RECORDINGS, RESUME_PLAYER, STATUS
+  PAUSE_PLAYER, PLAYBACK_STATUS, PLAY_RECORDING, RECORDINGS, RESUME_PLAYER, SEEK_PLAYER, STATUS
 } from "../graphql/piano";
 import { handleError } from "../client";
 
@@ -16,16 +16,17 @@ export default function Piano() {
   const { data: playbackStatus, error: playbackStatusErr } = useSubscription(PLAYBACK_STATUS);
   useEffect(() => handleError(playbackStatusErr), [playbackStatusErr]);
   const isPlaying = playbackStatus?.pianoPlaybackStatus.isPlaying;
+  const position = playbackStatus?.pianoPlaybackStatus.position;
   const lastPlayedRecording = playbackStatus?.pianoPlaybackStatus.lastPlayedRecording;
 
   const [playRecording, { error: playRecordingErr }] = useMutation(PLAY_RECORDING);
   useEffect(() => handleError(playRecordingErr), [playRecordingErr]);
-
-  const [resumePlayer, { error: resumePlayerErr }] = useMutation(RESUME_PLAYER);
-  useEffect(() => handleError(resumePlayerErr), [resumePlayerErr]);
-
-  const [pausePlayer, { error: pausePlayerErr }] = useMutation(PAUSE_PLAYER);
-  useEffect(() => handleError(pausePlayerErr), [pausePlayerErr]);
+  const [resume, { error: resumeErr }] = useMutation(RESUME_PLAYER);
+  useEffect(() => handleError(resumeErr), [resumeErr]);
+  const [pause, { error: pauseErr }] = useMutation(PAUSE_PLAYER);
+  useEffect(() => handleError(pauseErr), [pauseErr]);
+  const [seek, { error: seekErr }] = useMutation(SEEK_PLAYER);
+  useEffect(() => handleError(seekErr), [seekErr]);
 
   const {
     data: recordings,
@@ -40,8 +41,8 @@ export default function Piano() {
         <Group>
           <ActionIcon
             onClick={() => {
-              if (recording.id == lastPlayedRecording?.id) {
-                isPlaying ? pausePlayer() : resumePlayer();
+              if (position && recording.id == lastPlayedRecording?.id) {
+                isPlaying ? pause() : resume();
               } else {
                 playRecording({ variables: { id: recording.id } });
               }
@@ -61,8 +62,17 @@ export default function Piano() {
   });
 
   return (<>
-    <ScrollArea h="calc(100vh - var(--mantine-tab-height))" pb={10}>
+    <ScrollArea h="calc(100vh - var(--mantine-tab-height) - 5em)" pb={10}>
       {recordingsList}
     </ScrollArea>
+    <Slider value={position?.currentMs} max={position?.totalMs ? position.totalMs : 1}
+      disabled={!position} label={humanDuration}
+      onChangeEnd={millis => seek({ variables: { posMs: millis } })} />
   </>);
+}
+
+function humanDuration(millis: number) {
+  const formatNum = (num: number) => Math.trunc(num).toString().padStart(2, "0");
+  const secs = millis / 1000;
+  return `${formatNum(secs / 60)}:${formatNum(secs % 60)}`;
 }

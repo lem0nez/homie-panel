@@ -27,18 +27,12 @@ export const apolloClient = new ApolloClient({
 });
 
 export function handleError(err: ApolloError | undefined) {
-  if (!err) return;
-
-  if (err.graphQLErrors.length == 0) {
-    console.error(err);
-  } else {
-    err.graphQLErrors.forEach((graphqlErr) => {
-      // const code = graphqlErr.extensions?.["code"] as string | undefined;
-      notifications.show({
-        title: "Error",
-        message: graphqlErr.message,
-        color: "red",
-      });
+  err?.graphQLErrors.forEach((graphqlErr) => {
+    // const code = graphqlErr.extensions?.["code"] as string | undefined;
+    notifications.show({
+      title: "Error",
+      message: graphqlErr.message,
+      color: "red",
     });
-  }
+  });
 }
