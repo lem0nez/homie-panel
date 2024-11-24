@@ -22,13 +22,13 @@ export default function App() {
   const [poweredOff, setPoweredOff] = useState(false);
   const [powerOffDialogOpened, powerOffDialog] = useDisclosure(false);
 
-  const { data: events, error: eventsError } = useSubscription(GLOBAL_EVENTS);
+  const { data: events, error: eventsErr } = useSubscription(GLOBAL_EVENTS);
   useEffect(() => {
     if (events?.globalEvents == "SHUTDOWN") {
       setPoweredOff(true);
     }
   }, [events]);
-  useEffect(() => handleError(eventsError), [eventsError]);
+  useEffect(() => handleError(eventsErr), [eventsErr]);
 
   const [powerOffRequested, setPowerOffRequested] = useState(false);
   useEffect(() => {
