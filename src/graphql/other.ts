@@ -1,7 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from "./__generated__";
 
-export const GLOBAL_EVENTS = gql`
-  subscription {
+export const GLOBAL_EVENTS = gql(`
+  subscription OnGlobalEvent {
     globalEvents
   }
-`;
+`);

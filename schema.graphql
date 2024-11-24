@@ -1,0 +1,220 @@
+
+"""
+Implement the DateTime<Local> scalar
+
+The input/output is a string in RFC3339 format.
+"""
+scalar DateTime
+
+
+enum GlobalEvent {
+	SHUTDOWN
+	PREFERENCES_UPDATED
+}
+
+
+
+scalar Int64
+
+type MiTempMonitorData {
+	timepoint: DateTime!
+	humidityPercents: Int!
+	batteryPercents: Int!
+	tempCelsius: String!
+	voltage: String!
+}
+
+type MutationRoot {
+	piano: PianoMutation!
+	updatePreferences(update: PreferencesUpdate!): Boolean!
+}
+
+input OptionalFloatUpdate {
+	value: Float
+}
+
+input OptionalStringUpdate {
+	value: String
+}
+
+enum PianoEvent {
+	PIANO_CONNECTED
+	PIANO_REMOVED
+	PLAYER_INITIALIZED
+	RECORDER_INITIALIZED
+	"""
+	Indicates that player and recorder became unavailable.
+	"""
+	AUDIO_RELEASED
+	"""
+	Triggered on **manual** play or resume.
+	"""
+	PLAYER_PLAY
+	PLAYER_PAUSE
+	RECORD_START
+	NEW_RECORDING_SAVED
+	OLD_RECORDINGS_REMOVED
+}
+
+type PianoMutation {
+	"""
+	If there is already playing recording, it will be stopped.
+	"""
+	playRecording(id: Int64!): Int!
+	"""
+	Takes a number in range `[0.00, 1.00]`, where `0.00` is the beginning of an audio source
+	and `1.00` is the end. Returns `false` if there is no playing (or paused) audio.
+	"""
+	seekPlayerToPercents(percents: Float!): Boolean!
+	"""
+	Seek player to the given position represented in milliseconds.
+	Returns `false` if there is no playing (or paused) audio.
+	"""
+	seekPlayerToPosition(posMs: Int!): Boolean!
+	"""
+	Returns `true` if there is was paused recording.
+	"""
+	resumePlayer: Boolean!
+	"""
+	Returns `true` if there is was playing recording.
+	"""
+	pausePlayer: Boolean!
+	record: Boolean!
+	"""
+	Stop recorder and preserve a new recording.
+	"""
+	stopRecorder: PianoRecording!
+}
+
+type PianoPlaybackStatus {
+	"""
+	Is some recording playing now.
+	"""
+	isPlaying: Boolean!
+	"""
+	[None] if there was no played recording _since piano connected_.
+	"""
+	lastPlayedRecording: PianoRecording
+	"""
+	[None] if there is no playing (or paused) recording.
+	"""
+	position: PlaybackPosition
+}
+
+type PianoPreferences {
+	"""
+	Volume of the secondary sounds. Each sample will be multiplied by this value.
+	`1.0` is the normal (original) volume.
+	"""
+	soundsVolume: Float!
+	"""
+	If set, multiply samples amplitude of recordings by the given float amplitude.
+	"""
+	recordAmplitudeScale: Float
+	"""
+	If provided, embed ARTIST metadata into the recordings using the given value.
+	"""
+	recordingsArtist: String
+}
+
+input PianoPreferencesUpdate {
+	soundsVolume: Float
+	recordAmplitudeScale: OptionalFloatUpdate
+	recordingsArtist: OptionalStringUpdate
+}
+
+type PianoQuery {
+	"""
+	Recordings ordered by the creation time.
+	"""
+	recordings(order: SortOrder! = DESCENDING): [PianoRecording!]!
+}
+
+type PianoRecording {
+	creationTime: DateTime!
+	id: Int!
+	humanCreationDate: String!
+	humanDuration: String!
+	durationMs: Int!
+	apiEndpoint: String!
+}
+
+type PianoStatus {
+	"""
+	Is piano plugged in.
+	"""
+	connected: Boolean!
+	"""
+	Whether player is available.
+	"""
+	hasPlayer: Boolean!
+	"""
+	Whether recorder is available.
+	"""
+	hasRecorder: Boolean!
+	"""
+	Is audio recording in process.
+	"""
+	isRecording: Boolean!
+}
+
+type PlaybackPosition {
+	currentMs: Int!
+	currentHuman: String!
+	totalMs: Int
+	totalHuman: String
+	"""
+	Returns played part percents (from 0.00 to 1.00).
+	"""
+	percents: Float
+}
+
+type Preferences {
+	"""
+	Whether to disconnect from Wi-Fi access point if connected Bluetooth device is the same.
+	It prevents audio freezing while hosting device plays it via Bluetooth.
+	Hotspot configuration must be provided at server initialization to make it work.
+	"""
+	hotspotHandlingEnabled: Boolean!
+	"""
+	Piano-related settings.
+	"""
+	piano: PianoPreferences!
+}
+
+input PreferencesUpdate {
+	hotspotHandlingEnabled: Boolean
+	piano: PianoPreferencesUpdate
+}
+
+type QueryRoot {
+	piano: PianoQuery!
+	preferences: Preferences!
+}
+
+enum SortOrder {
+	ASCENDING
+	DESCENDING
+}
+
+
+type SubscriptionRoot {
+	globalEvents: GlobalEvent!
+	pianoEvents: PianoEvent!
+	pianoStatus: PianoStatus!
+	"""
+	Takes maximum interval between checks of the current playback position when
+	player is playing. Otherwise it will update depending on received events.
+	"""
+	pianoPlaybackStatus(livePosCheckIntervalMs: Int! = 500): PianoPlaybackStatus!
+	loungeTempMonitorData: MiTempMonitorData
+}
+
+directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @specifiedBy(url: String!) on SCALAR
+schema {
+	query: QueryRoot
+	mutation: MutationRoot
+	subscription: SubscriptionRoot
+}
