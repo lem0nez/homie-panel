@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
       <MantineProvider theme={theme} cssVariablesResolver={variablesResolver}
-        defaultColorScheme="dark"
+        defaultColorScheme="auto"
       >
         <Notifications />
         <App />

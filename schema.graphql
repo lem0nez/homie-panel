@@ -47,10 +47,11 @@ enum PianoEvent {
 	"""
 	AUDIO_RELEASED
 	"""
-	Triggered on **manual** play or resume.
+	Triggered on play or resume.
 	"""
 	PLAYER_PLAY
 	PLAYER_PAUSE
+	PLAYER_SEEK
 	RECORD_START
 	NEW_RECORDING_SAVED
 	OLD_RECORDINGS_REMOVED
@@ -58,6 +59,7 @@ enum PianoEvent {
 
 type PianoMutation {
 	"""
+	Executing this mutation can take a long time as it _decodes_ entire recording.
 	If there is already playing recording, it will be stopped.
 	"""
 	playRecording(id: Int64!): Int!

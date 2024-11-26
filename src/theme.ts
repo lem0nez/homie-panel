@@ -1,4 +1,4 @@
-import { CSSVariablesResolver, MantineColorsTuple, createTheme, rem } from "@mantine/core";
+import { CSSVariablesResolver, MantineColorsTuple, createTheme } from "@mantine/core";
 import "@fontsource/raleway/latin-400.css";
 
 const gold: MantineColorsTuple = [
@@ -17,6 +17,7 @@ const gold: MantineColorsTuple = [
 export const variablesResolver: CSSVariablesResolver = (theme) => ({
   variables: {
     "--mantine-tab-height": theme.other.tabHeight,
+    "--mantine-max-width": theme.other.maxWidth,
   },
   dark: {},
   light: {},
@@ -27,6 +28,7 @@ export const theme = createTheme({
   primaryColor: "primary",
   fontFamily: "Raleway",
   other: {
-    tabHeight: rem(35),
+    tabHeight: "2.25rem",
+    maxWidth: "50rem",
   },
 });

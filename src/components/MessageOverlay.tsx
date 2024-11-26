@@ -1,19 +1,20 @@
-import { Container, Overlay, Stack, Title, Transition } from "@mantine/core";
+import { Box, Overlay, Stack, Title, Transition } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { MdErrorOutline, MdOutlinePowerSettingsNew } from "react-icons/md";
 import { TbFaceIdError } from "react-icons/tb";
 
+const iconSize = 96;
 
 export function ConnectErrorOverlay() {
   const [props, setProps] = useState(new Props());
   useEffect(() => {
     fetch("/api/validate", { method: "POST" }).then((response) => {
       if (response.status == 401) {
-        setProps(new Props(false, <TbFaceIdError size={100} />, "Authorization failed"));
+        setProps(new Props(false, <TbFaceIdError size={iconSize} />, "Authorization failed"));
       } else if (!response.ok) {
         setProps(new Props(
           false,
-          <MdErrorOutline size={100} />,
+          <MdErrorOutline size={iconSize} />,
           "Hub is unreachable (code " + response.status + ")",
         ));
       }
@@ -25,7 +26,7 @@ export function ConnectErrorOverlay() {
 export function PoweredOffOverlay({ hidden }: { hidden: boolean; }) {
   return MessageOverlay(new Props(
     hidden,
-    <MdOutlinePowerSettingsNew size={100} />,
+    <MdOutlinePowerSettingsNew size={iconSize} />,
     "Hub is shut down",
   ));
 }
@@ -44,15 +45,15 @@ class Props {
 
 function MessageOverlay({ hidden, icon, message }: Props) {
   return (
-    <Container hidden={hidden}>
+    <Box hidden={hidden}>
       <Transition mounted={!hidden}>{(styles) =>
         <Overlay style={styles} center>
           <Stack align="center">
             {icon}
-            <Title m={15} fw={500} style={{ textAlign: "center" }}>{message}</Title>
+            <Title m="md" fw="lighter" style={{ textAlign: "center" }}>{message}</Title>
           </Stack>
         </Overlay>
       }</Transition>
-    </Container>
+    </Box>
   );
 }

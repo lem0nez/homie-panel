@@ -1,7 +1,7 @@
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 
-import { Box, Button, Container, Dialog, SimpleGrid, Tabs, Text } from "@mantine/core";
+import { Box, Button, Container, Dialog, Group, ScrollArea, Tabs, Text } from "@mantine/core";
 import { useDisclosure, useLocalStorage, useViewportSize } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 
@@ -19,27 +19,31 @@ import { handleError } from "../client";
 
 
 export default function App() {
-  const [contentHeight, setContentHeight] = useState("100vh - var(--mantine-tab-height)");
+  const [contentHeight, setContentHeight] = useState("(100vh - var(--mantine-tab-height))");
   // Take care about the auto-hiding URL bar on mobile devices.
   const { height } = useViewportSize();
   useEffect(() => {
-    if (height != 0) setContentHeight(height + "px - var(--mantine-tab-height)");
+    if (height != 0) {
+      setContentHeight("(" + height + "px - var(--mantine-tab-height))");
+    }
   }, [height]);
 
   const [poweredOff, setPoweredOff] = useState(false);
   const [powerOffDialogOpened, powerOffDialog] = useDisclosure(false);
 
-  const { data: events, error: eventsErr } = useSubscription(GLOBAL_EVENTS);
+  const { data: event, error: eventErr } = useSubscription(GLOBAL_EVENTS);
   useEffect(() => {
-    if (events?.globalEvents == "SHUTDOWN") {
+    if (event?.globalEvents == "SHUTDOWN") {
       setPoweredOff(true);
     }
-  }, [events]);
-  useEffect(() => handleError(eventsErr), [eventsErr]);
+  }, [event]);
+  useEffect(() => handleError(eventErr), [eventErr]);
 
   const [powerOffRequested, setPowerOffRequested] = useState(false);
   useEffect(() => {
-    if (!powerOffRequested) return;
+    if (!powerOffRequested) {
+      return;
+    }
 
     fetch("/api/poweroff", { method: "POST" }).then((response) => {
       powerOffDialog.close();
@@ -63,9 +67,13 @@ export default function App() {
   });
 
   const onTabChange = (tab: string | null) => {
-    if (!tab) return;
+    if (!tab) {
+      return;
+    }
     setActiveTab(tab);
-    if (tab != "home") powerOffDialog.close();
+    if (tab != "home") {
+      powerOffDialog.close();
+    }
   };
 
   return (
@@ -73,20 +81,22 @@ export default function App() {
       <ConnectErrorOverlay />
       <PoweredOffOverlay hidden={!poweredOff} />
 
-      <Tabs color="var(--mantine-color-white)" value={activeTab} onChange={onTabChange}>
-        <Tabs.List className={classes.tabsList}>
-          <Tabs.Tab className={classes.tab} value="home" leftSection={<MdHome />}>
-            Homie Home
-          </Tabs.Tab>
-          <Tabs.Tab className={classes.tab} value="piano" leftSection={<MdMusicNote />}>
-            Piano
-          </Tabs.Tab>
-        </Tabs.List>
+      <Tabs radius={0} color="var(--mantine-color-white)" value={activeTab} onChange={onTabChange}>
+        <ScrollArea type="never">
+          <Tabs.List className={classes.tabsList}>
+            <Tabs.Tab className={classes.tab} value="home" leftSection={<MdHome />}>
+              Homie Home
+            </Tabs.Tab>
+            <Tabs.Tab className={classes.tab} value="piano" leftSection={<MdMusicNote />}>
+              Piano
+            </Tabs.Tab>
+          </Tabs.List>
+        </ScrollArea>
 
-        <Container maw={800}>
-          <Tabs.Panel value="home" pt={15}>
+        <Container maw="var(--mantine-max-width)" p={0}>
+          <Tabs.Panel value="home" p="sm">
             <LoungeMonitor />
-            <Button mt={15} variant="outline" leftSection={<MdPowerSettingsNew />} fullWidth
+            <Button mt="md" variant="outline" fullWidth leftSection={<MdPowerSettingsNew />}
               onClick={() => powerOffDialog.open()}
             >
               Shut down the hub
@@ -100,12 +110,12 @@ export default function App() {
 
       <Dialog opened={powerOffDialogOpened}>
         <Text>Do you really want to shut down the hub?</Text>
-        <SimpleGrid mt={15} cols={2}>
+        <Group mt="md" grow>
           <Button loading={powerOffRequested} onClick={() => setPowerOffRequested(true)}>
             Shut down
           </Button>
           <Button variant="outline" onClick={() => powerOffDialog.close()}>Cancel</Button>
-        </SimpleGrid>
+        </Group>
       </Dialog>
     </Box>
   );

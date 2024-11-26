@@ -1,4 +1,4 @@
-import { Flex, Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import { Box, Group, Paper, Stack, Text, Title } from "@mantine/core";
 import { useEffect } from "react";
 import { useSubscription } from "@apollo/client";
 
@@ -31,19 +31,13 @@ interface Props {
 
 function TempMonitor({ title, icon, data }: Props) {
   return (
-    <Paper p={15}>
-      <Grid mb={15}>
-        <Grid.Col span={10}>
-          <Group c="gray.5">{icon}{title}</Group>
-        </Grid.Col>
-        <Grid.Col span={2}>
-          <Flex justify="flex-end" c="primary">
-            {batteryIcon(data ? data.batteryPercents : 0)}
-          </Flex>
-        </Grid.Col>
-      </Grid>
-      <Stack gap={0}>
-        <Title fw={500}>{data ? data.tempCelsius : "\u2013"} °C</Title>
+    <Paper p="md">
+      <Group wrap="nowrap">
+        <Group style={{ flexGrow: 1 }} wrap="nowrap" c="gray">{icon}{title}</Group>
+        <Box c="primary">{batteryIcon(data ? data.batteryPercents : 0)}</Box>
+      </Group>
+      <Stack mt="md" gap={0}>
+        <Title fw="lighter">{data ? data.tempCelsius : "\u2013"} °C</Title>
         <Text>Humidity: {data ? data.humidityPercents : 0} %</Text>
       </Stack>
     </Paper>

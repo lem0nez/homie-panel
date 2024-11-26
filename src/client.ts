@@ -4,7 +4,6 @@ import { ApolloClient, ApolloError, InMemoryCache } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 
-
 export const apolloClient = new ApolloClient({
   link: new GraphQLWsLink(createClient({
     url: window.location.protocol === "https:" ? "wss://" : "ws://"

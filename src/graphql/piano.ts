@@ -1,5 +1,11 @@
 import { gql } from "../__generated__";
 
+export const EVENTS = gql(`
+  subscription OnPianoEvent {
+    pianoEvents
+  }
+`);
+
 export const STATUS = gql(`
   subscription OnPianoStatus {
     pianoStatus {
@@ -17,9 +23,11 @@ export const PLAYBACK_STATUS = gql(`
       isPlaying
       lastPlayedRecording {
         id
+        humanCreationDate
       }
       position {
         currentMs
+        currentHuman
         totalMs
       }
     }
@@ -49,17 +57,13 @@ export const PLAY_RECORDING = gql(`
 
 export const RESUME_PLAYER = gql(`
   mutation ResumePlayer {
-    piano {
-      resumePlayer
-    }
+    piano { resumePlayer }
   }
 `);
 
 export const PAUSE_PLAYER = gql(`
   mutation PausePlayer {
-    piano {
-      pausePlayer
-    }
+    piano { pausePlayer }
   }
 `);
 
@@ -73,18 +77,14 @@ export const SEEK_PLAYER = gql(`
 
 export const RECORD = gql(`
   mutation Record {
-    piano {
-      record
-    }
+    piano { record }
   }
 `);
 
 export const STOP_RECORDER = gql(`
   mutation StopRecorder {
     piano {
-      stopRecorder {
-        id
-      }
+      stopRecorder { id }
     }
   }
 `);
