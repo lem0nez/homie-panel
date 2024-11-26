@@ -2,7 +2,7 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 
 import { Box, Button, Container, Dialog, SimpleGrid, Tabs, Text } from "@mantine/core";
-import { useDisclosure, useLocalStorage } from "@mantine/hooks";
+import { useDisclosure, useLocalStorage, useViewportSize } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 
 import { useEffect, useState } from "react";
@@ -19,6 +19,13 @@ import { handleError } from "../client";
 
 
 export default function App() {
+  const [contentHeight, setContentHeight] = useState("100vh - var(--mantine-tab-height)");
+  // Take care about the auto-hiding URL bar on mobile devices.
+  const { height } = useViewportSize();
+  useEffect(() => {
+    if (height != 0) setContentHeight(height + "px - var(--mantine-tab-height)");
+  }, [height]);
+
   const [poweredOff, setPoweredOff] = useState(false);
   const [powerOffDialogOpened, powerOffDialog] = useDisclosure(false);
 
@@ -86,7 +93,7 @@ export default function App() {
             </Button>
           </Tabs.Panel>
           <Tabs.Panel value="piano">
-            <Piano />
+            <Piano height={contentHeight} />
           </Tabs.Panel>
         </Container>
       </Tabs>

@@ -9,7 +9,7 @@ import {
 import { handleError } from "../client";
 
 
-export default function Piano() {
+export default function Piano({ height }: { height: string; }) {
   const { data: status, error: statusErr } = useSubscription(STATUS);
   useEffect(() => handleError(statusErr), [statusErr]);
 
@@ -62,7 +62,7 @@ export default function Piano() {
   });
 
   return (<>
-    <ScrollArea h="calc(100vh - var(--mantine-tab-height) - 5em)" pb={10}>
+    <ScrollArea h={`calc(${height} - 5rem)`} pb={10}>
       {recordingsList}
     </ScrollArea>
     <Slider value={position?.currentMs} max={position?.totalMs ? position.totalMs : 1}
