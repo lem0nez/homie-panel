@@ -15,6 +15,7 @@ import {
 import { useSubscription } from "@apollo/client";
 
 import classes from "./App.module.css";
+import Lazy from "./Lazy";
 import { ConnectErrorOverlay, PoweredOffOverlay } from "./MessageOverlay";
 import { LoungeMonitor } from "./TempMonitor";
 import Piano from "./Piano";
@@ -110,15 +111,19 @@ export default function App() {
 
         <Container maw="var(--mantine-max-width)" p={0}>
           <Tabs.Panel value="home" p="sm">
-            <LoungeMonitor />
-            <Button mt="md" variant="outline" fullWidth leftSection={<MdPowerSettingsNew />}
-              onClick={() => powerOffDialog.open()}
-            >
-              Shut down the hub
-            </Button>
+            <Lazy visible={activeTab == "home"}>
+              <LoungeMonitor />
+              <Button mt="md" variant="outline" fullWidth leftSection={<MdPowerSettingsNew />}
+                onClick={() => powerOffDialog.open()}
+              >
+                Shut down the hub
+              </Button>
+            </Lazy>
           </Tabs.Panel>
           <Tabs.Panel value="piano">
-            <Piano height={contentHeight} />
+            <Lazy visible={activeTab == "piano"}>
+              <Piano height={contentHeight} />
+            </Lazy>
           </Tabs.Panel>
         </Container>
       </Tabs>
