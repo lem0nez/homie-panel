@@ -14,7 +14,7 @@ export const apolloClient = new ApolloClient({
 });
 
 export function handleError(err: ApolloError | undefined) {
-  err?.graphQLErrors.forEach((graphqlErr) => {
+  err?.graphQLErrors.forEach(graphqlErr => {
     // const code = graphqlErr.extensions?.["code"] as string | undefined;
     notifications.show({
       title: "Error",

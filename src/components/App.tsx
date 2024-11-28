@@ -25,12 +25,12 @@ import { handleError } from "../client";
 
 
 export default function App() {
-  const [contentHeight, setContentHeight] = useState("(100vh - var(--mantine-tab-height))");
+  const [contentHeight, setContentHeight] = useState("calc(100vh - var(--mantine-tab-height))");
   // Take care about the auto-hiding URL bar on mobile devices.
   const { height } = useViewportSize();
   useEffect(() => {
     if (height != 0) {
-      setContentHeight("(" + height + "px - var(--mantine-tab-height))");
+      setContentHeight("calc(" + height + "px - var(--mantine-tab-height))");
     }
   }, [height]);
 
@@ -51,7 +51,7 @@ export default function App() {
       return;
     }
 
-    fetch("/api/poweroff", { method: "POST" }).then((response) => {
+    fetch("/api/poweroff", { method: "POST" }).then(response => {
       powerOffDialog.close();
       setPowerOffRequested(false);
 

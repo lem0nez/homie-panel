@@ -28,7 +28,7 @@ export const theme = createTheme({
   primaryColor: "primary",
   fontFamily: "Raleway",
   other: {
-    tabHeight: "2.25rem",
+    tabHeight: "2.4rem",
     maxWidth: "50rem",
   },
 });

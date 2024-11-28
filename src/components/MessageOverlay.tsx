@@ -8,7 +8,7 @@ const iconSize = 96;
 export function ConnectErrorOverlay() {
   const [props, setProps] = useState(new Props());
   useEffect(() => {
-    fetch("/api/validate", { method: "POST" }).then((response) => {
+    fetch("/api/validate", { method: "POST" }).then(response => {
       if (response.status == 401) {
         setProps(new Props(false, <TbFaceIdError size={iconSize} />, "Authorization failed"));
       } else if (!response.ok) {
@@ -46,7 +46,7 @@ class Props {
 function MessageOverlay({ hidden, icon, message }: Props) {
   return (
     <Box hidden={hidden}>
-      <Transition mounted={!hidden}>{(styles) =>
+      <Transition mounted={!hidden}>{styles =>
         <Overlay c="white" style={styles} center>
           <Stack align="center">
             {icon}
