@@ -47,7 +47,7 @@ function MessageOverlay({ hidden, icon, message }: Props) {
   return (
     <Box hidden={hidden}>
       <Transition mounted={!hidden}>{(styles) =>
-        <Overlay style={styles} center>
+        <Overlay c="white" style={styles} center>
           <Stack align="center">
             {icon}
             <Title m="md" fw="lighter" style={{ textAlign: "center" }}>{message}</Title>

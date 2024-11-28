@@ -1,12 +1,17 @@
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 
-import { Box, Button, Container, Dialog, Group, ScrollArea, Tabs, Text } from "@mantine/core";
+import {
+  ActionIcon, Box, Button, Container, Dialog, Group, ScrollArea, Tabs, Text,
+  useComputedColorScheme, useMantineColorScheme
+} from "@mantine/core";
 import { useDisclosure, useLocalStorage, useViewportSize } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 
 import { useEffect, useState } from "react";
-import { MdHome, MdMusicNote, MdPowerSettingsNew } from "react-icons/md";
+import {
+  MdHome, MdMusicNote, MdOutlineNightlight, MdOutlineWbSunny, MdPowerSettingsNew
+} from "react-icons/md";
 import { useSubscription } from "@apollo/client";
 
 import classes from "./App.module.css";
@@ -76,20 +81,30 @@ export default function App() {
     }
   };
 
+  const { setColorScheme } = useMantineColorScheme();
+  const colorScheme = useComputedColorScheme();
+
   return (
     <Box className={classes.body}>
       <ConnectErrorOverlay />
       <PoweredOffOverlay hidden={!poweredOff} />
 
-      <Tabs radius={0} color="var(--mantine-color-white)" value={activeTab} onChange={onTabChange}>
+      <Tabs radius={0} color="var(--switch-text-color)" value={activeTab} onChange={onTabChange}>
         <ScrollArea type="never">
           <Tabs.List className={classes.tabsList}>
             <Tabs.Tab className={classes.tab} value="home" leftSection={<MdHome />}>
               Homie Home
             </Tabs.Tab>
-            <Tabs.Tab className={classes.tab} value="piano" leftSection={<MdMusicNote />}>
+            <Tabs.Tab className={classes.tab} value="piano" leftSection={<MdMusicNote />}
+              mr="calc(var(--mantine-tab-height) * 1.5)"
+            >
               Piano
             </Tabs.Tab>
+            <ActionIcon variant="default" className={classes.themeToggle}
+              onClick={() => setColorScheme(colorScheme == "dark" ? "light" : "dark")}
+            >
+              {colorScheme == "dark" ? <MdOutlineNightlight /> : <MdOutlineWbSunny />}
+            </ActionIcon>
           </Tabs.List>
         </ScrollArea>
 

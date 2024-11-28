@@ -10,7 +10,7 @@
   }
 
   @mixin light {
-    background: linear-gradient(-45deg, #fafafa, #f5f5f5, var(--mantine-color-primary-2));
+    background: linear-gradient(-45deg, #fafafa, #f5f5f5, var(--mantine-color-primary-3));
     background-size: 400% 400%;
   }
 }
@@ -33,13 +33,28 @@
   flex-wrap: nowrap;
 
   :hover {
-    background: #35353555;
+    background: #55555533;
   }
 }
 
 .tab {
   height: var(--mantine-tab-height);
   font-size: var(--mantine-h5-font-size);
+
+  :hover {
+    background: transparent;
+  }
+}
+
+.themeToggle {
+  height: var(--mantine-tab-height);
+  width: var(--mantine-tab-height);
+  position: absolute;
+  right: 0;
+
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 
   :hover {
     background: transparent;
