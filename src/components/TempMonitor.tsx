@@ -12,6 +12,7 @@ import { handleError } from "../client";
 import { LOUNGE_DATA } from "../graphql/temp_monitor";
 import { MiTempMonitorData } from "../__generated__/graphql";
 
+const LOW_BATTERY_THRESHOLD = 20;
 
 export function LoungeMonitor() {
   const { data, error } = useSubscription(LOUNGE_DATA);
@@ -34,7 +35,9 @@ function TempMonitor({ title, icon, data }: Props) {
     <Paper p="md">
       <Group wrap="nowrap">
         <Group style={{ flexGrow: 1 }} wrap="nowrap" c="gray">{icon}{title}</Group>
-        <Box c="primary">{batteryIcon(data ? data.batteryPercents : 0)}</Box>
+        <Box c={data?.batteryPercents > LOW_BATTERY_THRESHOLD ? "primary" : "orange"}>
+          {batteryIcon(data ? data.batteryPercents : 0)}
+        </Box>
       </Group>
       <Stack mt="md" gap={0}>
         <Title fw="lighter">{data ? data.tempCelsius : "\u2013"} °C</Title>
