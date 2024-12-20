@@ -6,7 +6,7 @@ import { ApolloProvider } from "@apollo/client";
 
 import App from "./components/App.tsx";
 import { apolloClient } from "./client.ts";
-import { theme, variablesResolver } from "./theme.ts";
+import { customTheme, variablesResolver } from "./theme.ts";
 import { saveAuthToken } from "./utils.ts";
 
 saveAuthToken();
@@ -14,7 +14,7 @@ saveAuthToken();
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
-      <MantineProvider theme={theme} cssVariablesResolver={variablesResolver}
+      <MantineProvider theme={customTheme} cssVariablesResolver={variablesResolver}
         defaultColorScheme="auto"
       >
         <Notifications />

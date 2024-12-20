@@ -2,16 +2,17 @@ import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 
 import {
-  ActionIcon, Box, Button, Container, Dialog, Group, ScrollArea, Tabs, Text,
-  useComputedColorScheme, useMantineColorScheme
+  ActionIcon, Box, Button, Center, Container, Dialog, Group, Modal, ScrollArea, Tabs, Text,
+  useComputedColorScheme, useMantineColorScheme, useMantineTheme
 } from "@mantine/core";
 import { useDisclosure, useLocalStorage, useViewportSize } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 
 import { useEffect, useState } from "react";
 import {
-  MdHome, MdMusicNote, MdOutlineNightlight, MdOutlineWbSunny, MdPowerSettingsNew
+  MdHome, MdMusicNote, MdOutlineNightlight, MdOutlineWbSunny, MdPowerSettingsNew, MdQrCode
 } from "react-icons/md";
+import QRCode from "react-qr-code";
 import { useSubscription } from "@apollo/client";
 
 import classes from "./App.module.css";
@@ -22,6 +23,7 @@ import Piano from "./Piano";
 
 import { GLOBAL_EVENTS } from "../graphql/other";
 import { handleError } from "../client";
+import { getSiteAccessUrl } from "../utils";
 
 
 export default function App() {
@@ -34,6 +36,7 @@ export default function App() {
     }
   }, [height]);
 
+  const [shareAccessModalOpened, shareAccessModal] = useDisclosure(false);
   const [poweredOff, setPoweredOff] = useState(false);
   const [powerOffDialogOpened, powerOffDialog] = useDisclosure(false);
 
@@ -84,6 +87,7 @@ export default function App() {
 
   const { setColorScheme } = useMantineColorScheme();
   const colorScheme = useComputedColorScheme();
+  const theme = useMantineTheme();
 
   return (
     <Box className={classes.body}>
@@ -113,11 +117,21 @@ export default function App() {
           <Tabs.Panel value="home" p="sm">
             <Lazy visible={activeTab == "home"}>
               <LoungeMonitor />
-              <Button mt="md" variant="outline" fullWidth leftSection={<MdPowerSettingsNew />}
-                onClick={() => powerOffDialog.open()}
-              >
-                Shut down the hub
-              </Button>
+              <Group mt="md" grow>
+                <Button variant="outline" leftSection={<MdQrCode />}
+                  onClick={() => {
+                    shareAccessModal.open();
+                    powerOffDialog.close();
+                  }}
+                >
+                  Share access
+                </Button>
+                <Button variant="outline" leftSection={<MdPowerSettingsNew />}
+                  onClick={powerOffDialog.open}
+                >
+                  Shut down
+                </Button>
+              </Group>
             </Lazy>
           </Tabs.Panel>
           <Tabs.Panel value="piano">
@@ -128,13 +142,23 @@ export default function App() {
         </Container>
       </Tabs>
 
+      <Modal title="Site access link" size="sm" centered
+        styles={{ title: { fontSize: "var(--mantine-font-size-lg)" } }}
+        opened={shareAccessModalOpened} onClose={shareAccessModal.close}
+      >
+        <Center p="lg">
+          <QRCode value={getSiteAccessUrl()}
+            bgColor="transparent" fgColor={colorScheme == "dark" ? theme.white : theme.black} />
+        </Center>
+      </Modal>
+
       <Dialog opened={powerOffDialogOpened}>
         <Text>Do you really want to shut down the hub?</Text>
         <Group mt="md" grow>
           <Button loading={powerOffRequested} onClick={() => setPowerOffRequested(true)}>
             Shut down
           </Button>
-          <Button variant="outline" onClick={() => powerOffDialog.close()}>Cancel</Button>
+          <Button variant="outline" onClick={powerOffDialog.close}>Cancel</Button>
         </Group>
       </Dialog>
     </Box>

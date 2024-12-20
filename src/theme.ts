@@ -23,7 +23,7 @@ export const variablesResolver: CSSVariablesResolver = (theme) => ({
   light: {},
 });
 
-export const theme = createTheme({
+export const customTheme = createTheme({
   colors: { primary: gold },
   primaryColor: "primary",
   fontFamily: "Raleway",
