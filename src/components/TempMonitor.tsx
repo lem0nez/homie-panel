@@ -35,7 +35,7 @@ function TempMonitor({ title, icon, data }: Props) {
     <Paper p="md">
       <Group wrap="nowrap">
         <Group style={{ flexGrow: 1 }} wrap="nowrap" c="gray">{icon}{title}</Group>
-        <Box c={data?.batteryPercents > LOW_BATTERY_THRESHOLD ? "primary" : "orange"}>
+        <Box c={data?.batteryPercents || 0 > LOW_BATTERY_THRESHOLD ? "primary" : "orange"}>
           {batteryIcon(data ? data.batteryPercents : 0)}
         </Box>
       </Group>
