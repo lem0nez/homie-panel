@@ -53,6 +53,11 @@ enum PianoEvent {
 	PLAYER_PAUSE
 	PLAYER_SEEK
 	RECORD_START
+	"""
+	Triggered before stopping the recorder automatically
+	as the recording duration limit is reached.
+	"""
+	RECORDING_LENGTH_LIMIT_REACHED
 	NEW_RECORDING_SAVED
 	OLD_RECORDINGS_REMOVED
 }
@@ -81,6 +86,10 @@ type PianoMutation {
 	Returns `true` if there is was playing recording.
 	"""
 	pausePlayer: Boolean!
+	"""
+	Start the recorder. Piano event `RECORDING_LENGTH_LIMIT_REACHED`
+	will be triggered if recording takes too long.
+	"""
 	record: Boolean!
 	"""
 	Stop recorder and preserve a new recording.

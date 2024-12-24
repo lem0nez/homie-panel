@@ -20,6 +20,7 @@ export function handleError(err: ApolloError | undefined) {
       title: "Error",
       message: graphqlErr.message,
       color: "red",
+      autoClose: false,
     });
   });
 }

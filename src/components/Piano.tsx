@@ -1,8 +1,10 @@
 import {
   ActionIcon, Box, Button, Container, Group, Loader, Paper, ScrollArea, Slider, Text
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+
 import { useEffect, useState } from "react";
-import { MdDownload, MdPause, MdPlayArrow, MdStop } from "react-icons/md";
+import { MdDownload, MdPause, MdPlayArrow, MdSdCard, MdStop } from "react-icons/md";
 import { RiRecordCircleLine } from "react-icons/ri";
 import { useMutation, useQuery, useSubscription } from "@apollo/client";
 
@@ -72,6 +74,12 @@ export default function Piano({ height }: { height: string; }) {
     const event = eventResponse?.pianoEvents;
     if (event == "NEW_RECORDING_SAVED" || event == "OLD_RECORDINGS_REMOVED") {
       refetchRecordings();
+    } else if (event == "RECORDING_LENGTH_LIMIT_REACHED") {
+      notifications.show({
+        icon: <MdSdCard />,
+        title: "Piano recorder stopped",
+        message: "Recording length limit is reached",
+      });
     }
   }, [eventResponse, refetchRecordings]);
   useEffect(() => handleError(eventErr), [eventErr]);

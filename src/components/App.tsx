@@ -65,6 +65,7 @@ export default function App() {
           title: "Shutdown request failed",
           message: response.statusText,
           color: "red",
+          autoClose: false,
         });
       }
     });
